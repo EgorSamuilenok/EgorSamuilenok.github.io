@@ -32598,18 +32598,56 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     var src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(
     /*! src/app/store/country-list/country-list.facade */
     "./src/app/store/country-list/country-list.facade.ts");
+    /* harmony import */
+
+
+    var _angular_router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(
+    /*! @angular/router */
+    "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
 
     var CountryMapComponent = /*#__PURE__*/function () {
-      function CountryMapComponent(_zone, _store$, _facadeCountryListService) {
+      function CountryMapComponent(_zone, _store$, _facadeCountryListService, _router) {
         _classCallCheck(this, CountryMapComponent);
 
         this._zone = _zone;
         this._store$ = _store$;
         this._facadeCountryListService = _facadeCountryListService;
+        this._router = _router;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subject"]();
       }
 
       _createClass(CountryMapComponent, [{
+        key: "takeSearchMapCountryRouteName",
+        value: function takeSearchMapCountryRouteName(countryName) {
+          return countryName.replace(/\./g, '').replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
+        }
+      }, {
+        key: "takeSearchMapCountryRegionRouteName",
+        value: function takeSearchMapCountryRegionRouteName(countryRegionName) {
+          return this.takeNameOfContent(countryRegionName);
+        }
+      }, {
+        key: "takeSearchMapCountrySubRegionRouteName",
+        value: function takeSearchMapCountrySubRegionRouteName(countrySubregionName) {
+          return this.takeNameOfContent(countrySubregionName);
+        }
+      }, {
+        key: "takeNameOfContent",
+        value: function takeNameOfContent(contentName) {
+          return contentName.split(' ')[0].toLowerCase();
+        }
+      }, {
+        key: "navigateToSearchMapCountry",
+        value: function navigateToSearchMapCountry(country) {
+          var currentCountryRouteName = this.takeSearchMapCountryRouteName(country.name);
+          var currentCountryRegionRouteName = this.takeSearchMapCountryRegionRouteName(country.region);
+          var currentCountrySubRegionRouteName = this.takeSearchMapCountrySubRegionRouteName(country.subRegion);
+
+          this._router.navigate(['/countries', 'region', currentCountryRegionRouteName, currentCountrySubRegionRouteName, 'country', currentCountryRouteName]);
+
+          this._facadeCountryListService.dontSearchMapCountry();
+        }
+      }, {
         key: "ngOnInit",
         value: function ngOnInit() {
           var _this2 = this;
@@ -32723,11 +32761,23 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
             var chartWaterOpacity = 0.1;
             chart.backgroundSeries.mapPolygons.template.polygon.fill = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["color"]('#ffffff');
             chart.backgroundSeries.mapPolygons.template.polygon.fillOpacity = chartWaterOpacity;
+            var countrySubscription = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subject"]();
+            var searchCountryDelay = 1500;
+            countrySubscription.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["delay"])(searchCountryDelay), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(_this3._destroySubject$)).subscribe(function (countryName) {
+              _this3._facadeCountryListService.searchMapCountry(countryName);
+            });
             _this3.clickCountryEvent = country.events.on('hit', function (event) {
               event.target.series.chart.zoomToMapObject(event.target);
               var currentCountry = event.target.dataItem.dataContext.valueOf();
-              CountryMapComponent.currentClickCountryName = currentCountry.name;
+              countrySubscription.next(currentCountry.name);
             });
+
+            _this3._store$.select(src_app_store_country_list_country_list_selectors__WEBPACK_IMPORTED_MODULE_6__["selectSearchMapCountry"]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(_this3._destroySubject$)).subscribe(function (searchMapCountry) {
+              if (Boolean(searchMapCountry)) {
+                _this3.navigateToSearchMapCountry(searchMapCountry);
+              }
+            });
+
             chart.seriesContainer.events.disableType('doublehit');
             chart.chartContainer.background.events.disableType('doublehit');
 
@@ -32810,7 +32860,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     }();
 
     CountryMapComponent.ɵfac = function CountryMapComponent_Factory(t) {
-      return new (t || CountryMapComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_8__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__["FacadeServiceCountryList"]));
+      return new (t || CountryMapComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_8__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__["FacadeServiceCountryList"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_10__["Router"]));
     };
 
     CountryMapComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
@@ -32941,6 +32991,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           type: _ngrx_store__WEBPACK_IMPORTED_MODULE_8__["Store"]
         }, {
           type: src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__["FacadeServiceCountryList"]
+        }, {
+          type: _angular_router__WEBPACK_IMPORTED_MODULE_10__["Router"]
         }];
       }, null);
     })();

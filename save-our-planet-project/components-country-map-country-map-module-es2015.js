@@ -21546,6 +21546,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm2015/index.js");
 /* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/__ivy_ngcc__/fesm2015/store.js");
 /* harmony import */ var src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/app/store/country-list/country-list.facade */ "./src/app/store/country-list/country-list.facade.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/__ivy_ngcc__/fesm2015/router.js");
+
 
 
 
@@ -21558,11 +21560,42 @@ __webpack_require__.r(__webpack_exports__);
 
 
 class CountryMapComponent {
-    constructor(_zone, _store$, _facadeCountryListService) {
+    constructor(_zone, _store$, _facadeCountryListService, _router) {
         this._zone = _zone;
         this._store$ = _store$;
         this._facadeCountryListService = _facadeCountryListService;
+        this._router = _router;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subject"]();
+    }
+    takeSearchMapCountryRouteName(countryName) {
+        return countryName.replace(/\./g, '')
+            .replace(/\(|\)/g, '')
+            .toLowerCase()
+            .split(' ')
+            .join('-');
+    }
+    takeSearchMapCountryRegionRouteName(countryRegionName) {
+        return this.takeNameOfContent(countryRegionName);
+    }
+    takeSearchMapCountrySubRegionRouteName(countrySubregionName) {
+        return this.takeNameOfContent(countrySubregionName);
+    }
+    takeNameOfContent(contentName) {
+        return contentName.split(' ')[0].toLowerCase();
+    }
+    navigateToSearchMapCountry(country) {
+        const currentCountryRouteName = this.takeSearchMapCountryRouteName(country.name);
+        const currentCountryRegionRouteName = this.takeSearchMapCountryRegionRouteName(country.region);
+        const currentCountrySubRegionRouteName = this.takeSearchMapCountrySubRegionRouteName(country.subRegion);
+        this._router.navigate([
+            '/countries',
+            'region',
+            currentCountryRegionRouteName,
+            currentCountrySubRegionRouteName,
+            'country',
+            currentCountryRouteName
+        ]);
+        this._facadeCountryListService.dontSearchMapCountry();
     }
     ngOnInit() {
         this._store$.select(src_app_store_country_list_country_list_selectors__WEBPACK_IMPORTED_MODULE_6__["selectCountriesForestAreaData"])
@@ -21669,10 +21702,22 @@ class CountryMapComponent {
             const chartWaterOpacity = 0.1;
             chart.backgroundSeries.mapPolygons.template.polygon.fill = _amcharts_amcharts4_core__WEBPACK_IMPORTED_MODULE_1__["color"]('#ffffff');
             chart.backgroundSeries.mapPolygons.template.polygon.fillOpacity = chartWaterOpacity;
+            const countrySubscription = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subject"]();
+            const searchCountryDelay = 1500;
+            countrySubscription
+                .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["delay"])(searchCountryDelay), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this._destroySubject$)).subscribe((countryName) => {
+                this._facadeCountryListService.searchMapCountry(countryName);
+            });
             this.clickCountryEvent = country.events.on('hit', (event) => {
                 event.target.series.chart.zoomToMapObject(event.target);
                 const currentCountry = event.target.dataItem.dataContext.valueOf();
-                CountryMapComponent.currentClickCountryName = currentCountry.name;
+                countrySubscription.next(currentCountry.name);
+            });
+            this._store$.select(src_app_store_country_list_country_list_selectors__WEBPACK_IMPORTED_MODULE_6__["selectSearchMapCountry"])
+                .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_5__["takeUntil"])(this._destroySubject$)).subscribe((searchMapCountry) => {
+                if (Boolean(searchMapCountry)) {
+                    this.navigateToSearchMapCountry(searchMapCountry);
+                }
             });
             chart.seriesContainer.events.disableType('doublehit');
             chart.chartContainer.background.events.disableType('doublehit');
@@ -21733,7 +21778,7 @@ class CountryMapComponent {
         this.infoMode = !this.infoMode;
     }
 }
-CountryMapComponent.ɵfac = function CountryMapComponent_Factory(t) { return new (t || CountryMapComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_8__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__["FacadeServiceCountryList"])); };
+CountryMapComponent.ɵfac = function CountryMapComponent_Factory(t) { return new (t || CountryMapComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_8__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__["FacadeServiceCountryList"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_10__["Router"])); };
 CountryMapComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: CountryMapComponent, selectors: [["app-country-map"]], decls: 16, vars: 16, consts: [[1, "-app-country-map"], [1, "-app-country-map__chart"], [1, "-app-country-map__show-capitals"], [1, "-app-country-map__show-capitals-button", 3, "click"], [1, "-app-country-map__show-capitals-title"], [1, "-app-country-map__toggle"], [1, "-app-country-map__toggle-title", "-app-country-map__toggle-title_left"], [1, "-app-country-map__toggle-button", 3, "click"], [1, "-app-country-map__toggle-title", "-app-country-map__toggle-title_right"], [1, "-app-country-map__info"], [1, "-app-country-map__info-title"], [1, "-app-country-map__info-button", 3, "click"]], template: function CountryMapComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](1, "div", 1);
@@ -21790,7 +21835,7 @@ CountryMapComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
                 templateUrl: './country-map.component.html',
                 styleUrls: ['./country-map.component.scss']
             }]
-    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"] }, { type: _ngrx_store__WEBPACK_IMPORTED_MODULE_8__["Store"] }, { type: src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__["FacadeServiceCountryList"] }]; }, null); })();
+    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"] }, { type: _ngrx_store__WEBPACK_IMPORTED_MODULE_8__["Store"] }, { type: src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_9__["FacadeServiceCountryList"] }, { type: _angular_router__WEBPACK_IMPORTED_MODULE_10__["Router"] }]; }, null); })();
 
 
 /***/ }),

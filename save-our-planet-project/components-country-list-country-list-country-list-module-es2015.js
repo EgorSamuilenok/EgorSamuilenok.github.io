@@ -448,7 +448,14 @@ class CountryNameComponent {
             .toLowerCase()
             .split(' ')
             .join('-');
-        this._router.navigate(['/countries', 'region', this._regionName, this._subRegionName, 'country', countryName]);
+        this._router.navigate([
+            '/countries',
+            'region',
+            this._regionName,
+            this._subRegionName,
+            'country',
+            countryName
+        ]);
     }
 }
 CountryNameComponent.ɵfac = function CountryNameComponent_Factory(t) { return new (t || CountryNameComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_3__["ActivatedRoute"])); };
@@ -713,7 +720,19 @@ class CountryComponent {
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe((params) => {
             this._appNavigationDonationButton = document.querySelector('.-app-navigation__donation-button');
             this._appNavigationDonationButton.classList.remove('-app-navigation__donation-button_blinking');
-            this._facadeCountryListService.searchCountry(params.countryName);
+            if (Boolean(this.country)) {
+                const currentCountryRouteName = this.country.name.replace(/\./g, '')
+                    .replace(/\(|\)/g, '')
+                    .toLowerCase()
+                    .split(' ')
+                    .join('-');
+                if (currentCountryRouteName !== params.countryName) {
+                    this._facadeCountryListService.searchCountry(params.countryName);
+                }
+            }
+            else {
+                this._facadeCountryListService.searchCountry(params.countryName);
+            }
         });
         this._store$.select(src_app_store_donation_list_donation_list_selectors__WEBPACK_IMPORTED_MODULE_4__["selectCountriesForDonation"])
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe((selectedCountriesForDonation) => {
@@ -877,11 +896,19 @@ class RegionComponent {
             this.subRegionName = params.subRegionName;
             this._facadeCountryListService.searchSubRegionCountries(this.regionName, this.subRegionName);
         });
+        this._store$.select(src_app_store_country_list_country_list_selectors__WEBPACK_IMPORTED_MODULE_3__["selectSearchCountry"])
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe((searchCountry) => {
+            if (Boolean(searchCountry)) {
+                this._isSearchCountry = true;
+            }
+        });
         this._store$.select(src_app_store_country_list_country_list_selectors__WEBPACK_IMPORTED_MODULE_3__["selectSubRegionsCountries"])
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe((subRegionsCountries) => {
             if (Boolean(subRegionsCountries)) {
                 this.subRegionsCountries = subRegionsCountries;
-                this.navigateToCurrentSubRegionRoute();
+                if (!this._isSearchCountry) {
+                    this.navigateToCurrentSubRegionRoute();
+                }
             }
         });
     }

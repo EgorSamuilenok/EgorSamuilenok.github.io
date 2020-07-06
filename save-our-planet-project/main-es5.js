@@ -2744,7 +2744,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     !*** ./src/app/store/country-list/country-list.actions.ts ***!
     \************************************************************/
 
-  /*! exports provided: countryListActionsType, InitCountryListAction, InitCountryListSuccessAction, InitCapitalsCoordinatesAction, InitCapitalsCoordinatesDataAction, InitCapitalsCoordinatesDataSuccessAction, InitCountriesForestAreaAction, InitCountriesForestAreaDataAction, InitCountriesForestAreaDataSuccessAction, IsCountriesLoadingSuccessAction, SearchSubRegionCountriesAction, SearchCountryAction, SearchCountrySuccessAction, SearchPreviousCountryAction, SearchNextCountryAction, ToggleMapModeCountryListAction, ToggleShowCapitalsModeCountryListAction */
+  /*! exports provided: countryListActionsType, InitCountryListAction, InitCountryListSuccessAction, InitCapitalsCoordinatesAction, InitCapitalsCoordinatesDataAction, InitCapitalsCoordinatesDataSuccessAction, InitCountriesForestAreaAction, InitCountriesForestAreaDataAction, InitCountriesForestAreaDataSuccessAction, IsCountriesLoadingSuccessAction, SearchSubRegionCountriesAction, SearchCountryAction, SearchCountrySuccessAction, SearchPreviousCountryAction, SearchNextCountryAction, ToggleMapModeCountryListAction, ToggleShowCapitalsModeCountryListAction, SearchMapCountryAction, DontSearchMapCountryAction */
 
   /***/
   function srcAppStoreCountryListCountryListActionsTs(module, __webpack_exports__, __webpack_require__) {
@@ -2853,6 +2853,18 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     __webpack_require__.d(__webpack_exports__, "ToggleShowCapitalsModeCountryListAction", function () {
       return ToggleShowCapitalsModeCountryListAction;
     });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "SearchMapCountryAction", function () {
+      return SearchMapCountryAction;
+    });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "DontSearchMapCountryAction", function () {
+      return DontSearchMapCountryAction;
+    });
 
     var countryListActionsType;
 
@@ -2873,6 +2885,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       countryListActionsType["searchNextCountry"] = "[COUNTRY-LIST/API] Search-Next-Country Country-List";
       countryListActionsType["toggleMapMode"] = "[COUNTRY-LIST/API] Toggle-Map-Mode Country-List";
       countryListActionsType["toggleShowCapitalsMode"] = "[COUNTRY-LIST/API] Toggle-Is-Show-Capitals-Mode Country-List";
+      countryListActionsType["searchMapCountry"] = "[COUNTRY-LIST/API] Search-Map-Country Country-List";
+      countryListActionsType["dontSearchMapCountry"] = "[COUNTRY-LIST/API] Dont-Search-Map-Country Country-List";
     })(countryListActionsType || (countryListActionsType = {}));
 
     var InitCountryListAction = function InitCountryListAction() {
@@ -3085,6 +3099,32 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       _classCallCheck(this, ToggleShowCapitalsModeCountryListAction);
 
       this.type = countryListActionsType.toggleShowCapitalsMode;
+    }; // tslint:disable-next-line: max-classes-per-file
+
+
+    var SearchMapCountryAction = /*#__PURE__*/function () {
+      function SearchMapCountryAction(_payload) {
+        _classCallCheck(this, SearchMapCountryAction);
+
+        this._payload = _payload;
+        this.type = countryListActionsType.searchMapCountry;
+      }
+
+      _createClass(SearchMapCountryAction, [{
+        key: "name",
+        get: function get() {
+          return this._payload.name;
+        }
+      }]);
+
+      return SearchMapCountryAction;
+    }(); // tslint:disable-next-line: max-classes-per-file
+
+
+    var DontSearchMapCountryAction = function DontSearchMapCountryAction() {
+      _classCallCheck(this, DontSearchMapCountryAction);
+
+      this.type = countryListActionsType.dontSearchMapCountry;
     };
     /***/
 
@@ -3332,6 +3372,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           this.searchNextCountry(countryName);
         }
       }, {
+        key: "searchMapCountry",
+        value: function searchMapCountry(countryName) {
+          this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["SearchMapCountryAction"]({
+            name: countryName
+          }));
+        }
+      }, {
         key: "searchCountrySuccess",
         value: function searchCountrySuccess() {
           this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["SearchCountrySuccessAction"]());
@@ -3375,6 +3422,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         key: "countriesLoadingSuccess",
         value: function countriesLoadingSuccess() {
           this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["IsCountriesLoadingSuccessAction"]());
+        }
+      }, {
+        key: "dontSearchMapCountry",
+        value: function dontSearchMapCountry() {
+          this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["DontSearchMapCountryAction"]());
         }
       }]);
 
@@ -3460,7 +3512,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       subRegionsCountries: null,
       searchPreviousCountry: null,
       searchCountry: null,
-      searchNextCountry: null
+      searchNextCountry: null,
+      searchMapCountry: null
     };
 
     function countryListReducer() {
@@ -3603,6 +3656,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             });
           }
 
+        case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].searchMapCountry:
+          {
+            return Object.assign(Object.assign({}, state), {
+              searchMapCountry: _toConsumableArray(state.countryList).find(function (country) {
+                if (Boolean(country)) {
+                  var currentCountryName = country.name.toLowerCase().split(' ').join('');
+                  var currentSearchMapCountryName = action.name.toLowerCase().split(' ').join('');
+
+                  if (currentCountryName.includes(currentSearchMapCountryName)) {
+                    return country;
+                  } else {
+                    return null;
+                  }
+                }
+              })
+            });
+          }
+
+        case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].dontSearchMapCountry:
+          {
+            return Object.assign(Object.assign({}, state), {
+              searchMapCountry: null
+            });
+          }
+
         case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].searchCountrySuccess:
           {
             return Object.assign(Object.assign({}, state), {
@@ -3691,7 +3769,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     !*** ./src/app/store/country-list/country-list.selectors.ts ***!
     \**************************************************************/
 
-  /*! exports provided: selectStateCountryList, selectCountryListIsLoading, selectCountryList, selectCountryListIsInitedCountries, selectCountriesForestAreaData, selectIsInitedCountriesForestAreaData, selectCapitalsCoordinatesData, selectIsInitedCapitalsCoordinatesData, selectSubRegionsCountries, selectSearchCountry, selectSearchPreviousCountry, selectSearchNextCountry, selectIsCountrySearchLoading, selectIsMapMode, selectIsGlobeMode, selectIsShowCapitalsMode */
+  /*! exports provided: selectStateCountryList, selectCountryListIsLoading, selectCountryList, selectCountryListIsInitedCountries, selectCountriesForestAreaData, selectIsInitedCountriesForestAreaData, selectCapitalsCoordinatesData, selectIsInitedCapitalsCoordinatesData, selectSubRegionsCountries, selectSearchCountry, selectSearchPreviousCountry, selectSearchNextCountry, selectIsCountrySearchLoading, selectIsMapMode, selectIsGlobeMode, selectIsShowCapitalsMode, selectSearchMapCountry */
 
   /***/
   function srcAppStoreCountryListCountryListSelectorsTs(module, __webpack_exports__, __webpack_require__) {
@@ -3794,6 +3872,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     __webpack_require__.d(__webpack_exports__, "selectIsShowCapitalsMode", function () {
       return selectIsShowCapitalsMode;
     });
+    /* harmony export (binding) */
+
+
+    __webpack_require__.d(__webpack_exports__, "selectSearchMapCountry", function () {
+      return selectSearchMapCountry;
+    });
     /* harmony import */
 
 
@@ -3852,6 +3936,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     });
     var selectIsShowCapitalsMode = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateCountryList, function (state) {
       return state.isShowCapitalsMode;
+    });
+    var selectSearchMapCountry = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateCountryList, function (state) {
+      return state.searchMapCountry;
     });
     /***/
   },

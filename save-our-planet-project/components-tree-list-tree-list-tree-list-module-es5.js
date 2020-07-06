@@ -1397,9 +1397,19 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
             _this3.treeBuyNumber = 1;
 
-            _this3._facadeTreeListService.searchTree(params.treeName);
+            if (Boolean(_this3.tree)) {
+              var currentTreeRouteName = _this3.tree.name.replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
 
-            _this3._facadeTreeListService.goToTreeRouterMode();
+              if (currentTreeRouteName !== params.countryName) {
+                _this3._facadeTreeListService.searchTree(params.treeName);
+
+                _this3._facadeTreeListService.goToTreeRouterMode();
+              }
+            } else {
+              _this3._facadeTreeListService.searchTree(params.treeName);
+
+              _this3._facadeTreeListService.goToTreeRouterMode();
+            }
           });
 
           var searTreeDelay = 3000;

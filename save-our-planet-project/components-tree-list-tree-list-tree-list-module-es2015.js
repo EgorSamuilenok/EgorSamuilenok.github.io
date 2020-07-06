@@ -660,8 +660,20 @@ class TreeComponent {
             this._appNavigationDonationButton = document.querySelector('.-app-navigation__donation-button');
             this._appNavigationDonationButton.classList.remove('-app-navigation__donation-button_blinking');
             this.treeBuyNumber = 1;
-            this._facadeTreeListService.searchTree(params.treeName);
-            this._facadeTreeListService.goToTreeRouterMode();
+            if (Boolean(this.tree)) {
+                const currentTreeRouteName = this.tree.name.replace(/\(|\)/g, '')
+                    .toLowerCase()
+                    .split(' ')
+                    .join('-');
+                if (currentTreeRouteName !== params.countryName) {
+                    this._facadeTreeListService.searchTree(params.treeName);
+                    this._facadeTreeListService.goToTreeRouterMode();
+                }
+            }
+            else {
+                this._facadeTreeListService.searchTree(params.treeName);
+                this._facadeTreeListService.goToTreeRouterMode();
+            }
         });
         const searTreeDelay = 3000;
         this._store$.select(src_app_store_tree_list_tree_list_selectors__WEBPACK_IMPORTED_MODULE_3__["selectSearchTree"])

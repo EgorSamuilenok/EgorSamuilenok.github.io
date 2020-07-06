@@ -1584,7 +1584,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
             _this2._appNavigationDonationButton.classList.remove('-app-navigation__donation-button_blinking');
 
-            _this2._facadeCountryListService.searchCountry(params.countryName);
+            if (Boolean(_this2.country)) {
+              var currentCountryRouteName = _this2.country.name.replace(/\./g, '').replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
+
+              if (currentCountryRouteName !== params.countryName) {
+                _this2._facadeCountryListService.searchCountry(params.countryName);
+              }
+            } else {
+              _this2._facadeCountryListService.searchCountry(params.countryName);
+            }
           });
 
           this._store$.select(src_app_store_donation_list_donation_list_selectors__WEBPACK_IMPORTED_MODULE_4__["selectCountriesForDonation"]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe(function (selectedCountriesForDonation) {
@@ -1865,11 +1873,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             _this3._facadeCountryListService.searchSubRegionCountries(_this3.regionName, _this3.subRegionName);
           });
 
+          this._store$.select(src_app_store_country_list_country_list_selectors__WEBPACK_IMPORTED_MODULE_3__["selectSearchCountry"]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe(function (searchCountry) {
+            if (Boolean(searchCountry)) {
+              _this3._isSearchCountry = true;
+            }
+          });
+
           this._store$.select(src_app_store_country_list_country_list_selectors__WEBPACK_IMPORTED_MODULE_3__["selectSubRegionsCountries"]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe(function (subRegionsCountries) {
             if (Boolean(subRegionsCountries)) {
               _this3.subRegionsCountries = subRegionsCountries;
 
-              _this3.navigateToCurrentSubRegionRoute();
+              if (!_this3._isSearchCountry) {
+                _this3.navigateToCurrentSubRegionRoute();
+              }
             }
           });
         }
