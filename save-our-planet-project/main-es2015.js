@@ -1164,6 +1164,10 @@ class Tree {
     clone() {
         return new Tree(this.id, this.name, this.description, this.picture, this.size, this.environment, this.keyFeature, this.cost, this.type);
     }
+    equals(tree) {
+        return (Boolean(tree)
+            && JSON.stringify(tree) === JSON.stringify(this));
+    }
 }
 
 
@@ -1537,7 +1541,7 @@ UserListDataService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdef
 /*!************************************************************!*\
   !*** ./src/app/store/country-list/country-list.actions.ts ***!
   \************************************************************/
-/*! exports provided: countryListActionsType, InitCountryListAction, InitCountryListSuccessAction, InitCapitalsCoordinatesAction, InitCapitalsCoordinatesDataAction, InitCapitalsCoordinatesDataSuccessAction, InitCountriesForestAreaAction, InitCountriesForestAreaDataAction, InitCountriesForestAreaDataSuccessAction, IsCountriesLoadingSuccessAction, SearchSubRegionCountriesAction, SearchCountryAction, SearchCountrySuccessAction, SearchPreviousCountryAction, SearchNextCountryAction, ToggleMapModeCountryListAction, ToggleShowCapitalsModeCountryListAction, SearchMapCountryAction, DontSearchMapCountryAction, CountCountryForestAreaAction, ResetSearchCountriesAction, SelectCountryAction, ResetSelectedCountryAction */
+/*! exports provided: countryListActionsType, InitCountryListAction, InitCountryListSuccessAction, InitCapitalsCoordinatesAction, InitCapitalsCoordinatesDataAction, InitCapitalsCoordinatesDataSuccessAction, InitCountriesForestAreaAction, InitCountriesForestAreaDataAction, InitCountriesForestAreaDataSuccessAction, IsCountriesLoadingSuccessAction, SearchSubRegionCountriesAction, SearchCountryAction, SearchCountrySuccessAction, SearchPreviousCountryAction, SearchNextCountryAction, ToggleMapModeCountryListAction, ToggleShowCapitalsModeCountryListAction, SearchMapCountryAction, DontSearchMapCountryAction, CountCountryForestAreaAction, ResetSearchCountriesAction, SelectCountryAction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1564,7 +1568,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CountCountryForestAreaAction", function() { return CountCountryForestAreaAction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResetSearchCountriesAction", function() { return ResetSearchCountriesAction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SelectCountryAction", function() { return SelectCountryAction; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResetSelectedCountryAction", function() { return ResetSelectedCountryAction; });
 var countryListActionsType;
 (function (countryListActionsType) {
     countryListActionsType["initCountries"] = "[COUNTRY-LIST/API] Init-Countries Country-List";
@@ -1588,7 +1591,6 @@ var countryListActionsType;
     countryListActionsType["countCountryForestArea"] = "[COUNTRY-LIST/API] Count-Country-Forest-Area Country-List";
     countryListActionsType["resetSearchCounrties"] = "[COUNTRY-LIST/API] Reset-Search-Countries Country-List";
     countryListActionsType["selectCountry"] = "[COUNTRY-LIST/API] Select-Country Country-List";
-    countryListActionsType["resetSelectedCountry"] = "[COUNTRY-LIST/API] Reset-Selected-Country Country-List";
 })(countryListActionsType || (countryListActionsType = {}));
 class InitCountryListAction {
     constructor() {
@@ -1762,12 +1764,6 @@ class SelectCountryAction {
         return this._payload.country;
     }
 }
-// tslint:disable-next-line: max-classes-per-file
-class ResetSelectedCountryAction {
-    constructor() {
-        this.type = countryListActionsType.resetSelectedCountry;
-    }
-}
 
 
 /***/ }),
@@ -1925,9 +1921,6 @@ class FacadeServiceCountryList {
     }
     selectCountry(country) {
         this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["SelectCountryAction"]({ country }));
-    }
-    resetSelectedCountry() {
-        this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["ResetSelectedCountryAction"]());
     }
 }
 FacadeServiceCountryList.ɵfac = function FacadeServiceCountryList_Factory(t) { return new (t || FacadeServiceCountryList)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_3__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](src_app_services_country_list_country_data_service__WEBPACK_IMPORTED_MODULE_4__["CountryListDataService"])); };
@@ -2175,9 +2168,6 @@ function countryListReducer(state = initialState, action) {
         }
         case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].selectCountry: {
             return Object.assign(Object.assign({}, state), { selectedCountry: action.country.clone() });
-        }
-        case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].resetSelectedCountry: {
-            return Object.assign(Object.assign({}, state), { selectedCountry: null });
         }
         default: {
             return Object.assign({}, state);
@@ -3204,7 +3194,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!******************************************************!*\
   !*** ./src/app/store/tree-list/tree-list.actions.ts ***!
   \******************************************************/
-/*! exports provided: treeListActionsType, InitTreeListAction, InitTreeListSuccessAction, IsTreesLoadingSuccessAction, SearchTreeCategoryTreesAction, SearchTreeAction, SearchTreeSuccessAction, TreeRouterModeAction, GoFromTreeRouterAction, IsSelectedTreeForDonationAction */
+/*! exports provided: treeListActionsType, InitTreeListAction, InitTreeListSuccessAction, IsTreesLoadingSuccessAction, SearchTreeCategoryTreesAction, SearchTreeAction, SearchTreeSuccessAction, TreeRouterModeAction, GoFromTreeRouterAction, IsSelectedTreeForDonationAction, SelectTreeProductAction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3219,6 +3209,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TreeRouterModeAction", function() { return TreeRouterModeAction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GoFromTreeRouterAction", function() { return GoFromTreeRouterAction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IsSelectedTreeForDonationAction", function() { return IsSelectedTreeForDonationAction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SelectTreeProductAction", function() { return SelectTreeProductAction; });
 var treeListActionsType;
 (function (treeListActionsType) {
     treeListActionsType["initTrees"] = "[TREE-LIST/API] Init-Trees Tree-List";
@@ -3230,6 +3221,7 @@ var treeListActionsType;
     treeListActionsType["treeRouterMode"] = "[TREE-LIST/API] Tree-Router-Mode Tree-List";
     treeListActionsType["goFromTreeRouterMode"] = "[TREE-LIST/API] Go-From-Tree-Router-Mode Tree-List";
     treeListActionsType["isSelectedTreeForDonation"] = "[TREE-LIST/API] Is-Selected-Tree-For-Donation Tree-List";
+    treeListActionsType["selectTreeProduct"] = "[COUNTRY-LIST/API] Select-Tree-Product Tree-List";
 })(treeListActionsType || (treeListActionsType = {}));
 class InitTreeListAction {
     constructor() {
@@ -3301,6 +3293,16 @@ class IsSelectedTreeForDonationAction {
     }
     get donationListBeforeRegistration() {
         return this._payload.donationListBeforeRegistration;
+    }
+}
+// tslint:disable-next-line: max-classes-per-file
+class SelectTreeProductAction {
+    constructor(_payload) {
+        this._payload = _payload;
+        this.type = treeListActionsType.selectTreeProduct;
+    }
+    get treeProduct() {
+        return this._payload.treeProduct;
     }
 }
 
@@ -3400,6 +3402,9 @@ class FacadeServiceTreeList {
     isSelectedTreeForDonation(treeRouteName, donationListBeforeRegistration) {
         this._store$.dispatch(new _tree_list_actions__WEBPACK_IMPORTED_MODULE_1__["IsSelectedTreeForDonationAction"]({ treeRouteName, donationListBeforeRegistration }));
     }
+    selectTreeProduct(treeProduct) {
+        this._store$.dispatch(new _tree_list_actions__WEBPACK_IMPORTED_MODULE_1__["SelectTreeProductAction"]({ treeProduct }));
+    }
 }
 FacadeServiceTreeList.ɵfac = function FacadeServiceTreeList_Factory(t) { return new (t || FacadeServiceTreeList)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_2__["Store"])); };
 FacadeServiceTreeList.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: FacadeServiceTreeList, factory: FacadeServiceTreeList.ɵfac });
@@ -3433,7 +3438,8 @@ const initialState = {
     isSearchLoading: false,
     searchTree: null,
     isTreeRouterMode: false,
-    isSelectedTree: false
+    isSelectedTree: false,
+    selectedTreeProduct: null
 };
 function treeListReducer(state = initialState, action) {
     switch (action.type) {
@@ -3495,6 +3501,9 @@ function treeListReducer(state = initialState, action) {
                 return Object.assign(Object.assign({}, state), { isSelectedTree: false });
             }
         }
+        case _tree_list_actions__WEBPACK_IMPORTED_MODULE_0__["treeListActionsType"].selectTreeProduct: {
+            return Object.assign(Object.assign({}, state), { selectedTreeProduct: action.treeProduct.clone() });
+        }
         default: {
             return Object.assign({}, state);
         }
@@ -3511,7 +3520,7 @@ function StateReducerTreeList(state, action) {
 /*!********************************************************!*\
   !*** ./src/app/store/tree-list/tree-list.selectors.ts ***!
   \********************************************************/
-/*! exports provided: selectStateTreeList, selectTreeListIsLoading, selectTreeList, selectIsInitedTrees, selectTreeCategoryTrees, selectSearchTree, selectIsTreeSearchLoading, selectIsTreeRouterModeAction, selectIsSelectedTree */
+/*! exports provided: selectStateTreeList, selectTreeListIsLoading, selectTreeList, selectIsInitedTrees, selectTreeCategoryTrees, selectSearchTree, selectIsTreeSearchLoading, selectIsTreeRouterModeAction, selectIsSelectedTree, selectSelectedTreeProduct */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3525,6 +3534,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectIsTreeSearchLoading", function() { return selectIsTreeSearchLoading; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectIsTreeRouterModeAction", function() { return selectIsTreeRouterModeAction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectIsSelectedTree", function() { return selectIsSelectedTree; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectSelectedTreeProduct", function() { return selectSelectedTreeProduct; });
 /* harmony import */ var _tree_list_reducer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tree-list.reducer */ "./src/app/store/tree-list/tree-list.reducer.ts");
 /* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/__ivy_ngcc__/fesm2015/store.js");
 
@@ -3538,6 +3548,7 @@ const selectSearchTree = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["create
 const selectIsTreeSearchLoading = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateTreeList, (state) => state.isSearchLoading);
 const selectIsTreeRouterModeAction = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateTreeList, (state) => state.isTreeRouterMode);
 const selectIsSelectedTree = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateTreeList, (state) => state.isSelectedTree);
+const selectSelectedTreeProduct = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateTreeList, (state) => state.selectedTreeProduct);
 
 
 /***/ }),
