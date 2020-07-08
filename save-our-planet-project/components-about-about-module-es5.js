@@ -114,31 +114,37 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       // tslint:disable-next-line: no-empty
       function AboutComponent() {
         _classCallCheck(this, AboutComponent);
-
-        this._windowScrollHeight = 500;
       }
 
       _createClass(AboutComponent, [{
         key: "ngOnInit",
         value: function ngOnInit() {
-          var _this = this;
-
-          var leftDesert = document.querySelector('.-app-about__parallax-item_desert-left');
-          var rightDesert = document.querySelector('.-app-about__parallax-item_desert-right');
-          window.addEventListener('scroll', function () {
-            if (window.scrollY > _this._windowScrollHeight) {
-              leftDesert.classList.add('-app-about__parallax-item_desert-left-invisible');
-              rightDesert.classList.add('-app-about__parallax-item_desert-right-invisible');
-            } else {
-              leftDesert.classList.remove('-app-about__parallax-item_desert-left-invisible');
-              rightDesert.classList.remove('-app-about__parallax-item_desert-right-invisible');
-            }
-          });
+          AboutComponent.leftDesert = document.querySelector('.-app-about__parallax-item_desert-left');
+          AboutComponent.rightDesert = document.querySelector('.-app-about__parallax-item_desert-right');
+          window.addEventListener('scroll', AboutComponent.isScrolling);
+        }
+      }, {
+        key: "ngOnDestroy",
+        value: function ngOnDestroy() {
+          window.removeEventListener('scroll', AboutComponent.isScrolling);
+        }
+      }], [{
+        key: "isScrolling",
+        value: function isScrolling() {
+          if (window.scrollY > AboutComponent.windowScrollHeight) {
+            AboutComponent.leftDesert.classList.add('-app-about__parallax-item_desert-left-invisible');
+            AboutComponent.rightDesert.classList.add('-app-about__parallax-item_desert-right-invisible');
+          } else {
+            AboutComponent.leftDesert.classList.remove('-app-about__parallax-item_desert-left-invisible');
+            AboutComponent.rightDesert.classList.remove('-app-about__parallax-item_desert-right-invisible');
+          }
         }
       }]);
 
       return AboutComponent;
     }();
+
+    AboutComponent.windowScrollHeight = 500;
 
     AboutComponent.ɵfac = function AboutComponent_Factory(t) {
       return new (t || AboutComponent)();

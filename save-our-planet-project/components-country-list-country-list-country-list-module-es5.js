@@ -1834,7 +1834,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         this._activatedRoute = _activatedRoute;
         this._facadeCountryListService = _facadeCountryListService;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
-        this._windowScrollHeight = 2;
       }
 
       _createClass(RegionComponent, [{
@@ -1850,16 +1849,9 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         value: function ngOnInit() {
           var _this3 = this;
 
-          var scrollUpButton = document.querySelector('.-app-scroll-up-button_sub-region-category');
-          this._scrollBlock = document.querySelector('.-app-region');
-
-          this._scrollBlock.addEventListener('scroll', function () {
-            if (_this3._scrollBlock.scrollTop > _this3._windowScrollHeight) {
-              scrollUpButton.classList.add('-app-scroll-up-button_sub-region-category-visible');
-            } else {
-              scrollUpButton.classList.remove('-app-scroll-up-button_sub-region-category-visible');
-            }
-          });
+          RegionComponent.scrollBlock = document.querySelector('.-app-region');
+          RegionComponent.scrollUpButton = document.querySelector('.-app-scroll-up-button_sub-region-category');
+          RegionComponent.scrollBlock.addEventListener('scroll', RegionComponent.isScrolling);
 
           this._activatedRoute.params.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe(function (params) {
             _this3.regionName = params.regionName;
@@ -1896,11 +1888,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           this._destroySubject$.next(true);
 
           this._destroySubject$.complete();
+
+          RegionComponent.scrollBlock.removeEventListener('scroll', RegionComponent.isScrolling);
         }
       }, {
         key: "scrollTop",
         value: function scrollTop() {
-          this._scrollBlock.scrollTo(0, 0);
+          RegionComponent.scrollBlock.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
         }
       }, {
         key: "canDeactivate",
@@ -1908,10 +1905,21 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
           var deactivateQuestion = 'You haven’t chosen country. Are you sure that you want to go from this page? For donation you need at least one country';
           return !Boolean(this._countriesForDonation) ? confirm(deactivateQuestion) : true;
         }
+      }], [{
+        key: "isScrolling",
+        value: function isScrolling() {
+          if (RegionComponent.scrollBlock.scrollTop > RegionComponent.windowScrollHeight) {
+            RegionComponent.scrollUpButton.classList.add('-app-scroll-up-button_tree-category-visible');
+          } else {
+            RegionComponent.scrollUpButton.classList.remove('-app-scroll-up-button_tree-category-visible');
+          }
+        }
       }]);
 
       return RegionComponent;
     }();
+
+    RegionComponent.windowScrollHeight = 2;
 
     RegionComponent.ɵfac = function RegionComponent_Factory(t) {
       return new (t || RegionComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_5__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_6__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_7__["FacadeServiceCountryList"]));

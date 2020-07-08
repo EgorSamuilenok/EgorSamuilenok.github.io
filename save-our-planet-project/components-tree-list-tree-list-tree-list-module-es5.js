@@ -112,7 +112,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         this._router = _router;
         this._facadeTreeListService = _facadeTreeListService;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
-        this._windowScrollHeight = 20;
       }
 
       _createClass(TreeCategoryComponent, [{
@@ -120,14 +119,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         value: function ngOnInit() {
           var _this = this;
 
-          var scrollUpButton = document.querySelector('.-app-scroll-up-button_tree-category');
-          window.addEventListener('scroll', function () {
-            if (window.scrollY > _this._windowScrollHeight) {
-              scrollUpButton.classList.add('-app-scroll-up-button_tree-category-visible');
-            } else {
-              scrollUpButton.classList.remove('-app-scroll-up-button_tree-category-visible');
-            }
-          });
+          TreeCategoryComponent.scrollUpButton = document.querySelector('.-app-scroll-up-button_tree-category');
+          window.addEventListener('scroll', TreeCategoryComponent.isScrolling);
 
           this._activatedRoute.params.pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["takeUntil"])(this._destroySubject$)).subscribe(function (params) {
             _this.treeCategory = params.categoryName;
@@ -157,6 +150,8 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           this._destroySubject$.complete();
 
           this._facadeTreeListService.goFromTreeRouter();
+
+          window.removeEventListener('scroll', TreeCategoryComponent.isScrolling);
         }
       }, {
         key: "goToTreeCategoryRouter",
@@ -168,7 +163,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }, {
         key: "scrollTop",
         value: function scrollTop() {
-          window.scrollTo(0, 0);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
         }
       }, {
         key: "canDeactivate",
@@ -176,10 +174,21 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
           var deactivateQuestion = 'You haven’t chosen any tree. Are you sure that you want to go from this page? For donation you need at least one tree';
           return !Boolean(this._donationListBeforeRegistration) ? confirm(deactivateQuestion) : true;
         }
+      }], [{
+        key: "isScrolling",
+        value: function isScrolling() {
+          if (window.scrollY > TreeCategoryComponent.windowScrollHeight) {
+            TreeCategoryComponent.scrollUpButton.classList.add('-app-scroll-up-button_tree-category-visible');
+          } else {
+            TreeCategoryComponent.scrollUpButton.classList.remove('-app-scroll-up-button_tree-category-visible');
+          }
+        }
       }]);
 
       return TreeCategoryComponent;
     }();
+
+    TreeCategoryComponent.windowScrollHeight = 2;
 
     TreeCategoryComponent.ɵfac = function TreeCategoryComponent_Factory(t) {
       return new (t || TreeCategoryComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_6__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_5__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_store_tree_list_tree_list_facade__WEBPACK_IMPORTED_MODULE_7__["FacadeServiceTreeList"]));
@@ -190,7 +199,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       selectors: [["app-tree-category"]],
       decls: 9,
       vars: 8,
-      consts: [[1, "-app-tree-category"], [1, "-app-tree-category__title"], ["class", "-app-tree-category__product", 3, "tree", 4, "ngFor", "ngForOf"], [1, "-app-tree-category__back-button", 3, "click"], [1, "-app-scroll-up-button", "-app-scroll-up-button_tree-category", 3, "click"], [1, "-app-tree-category__product", 3, "tree"]],
+      consts: [[1, "-app-tree-category"], [1, "-app-tree-category__title"], ["class", "-app-tree-category__product", 3, "tree", 4, "ngFor", "ngForOf"], [1, "-app-scroll-up-button", "-app-scroll-up-button_tree-category", 3, "click"], [1, "-app-tree-category__back-button", 3, "click"], [1, "-app-tree-category__product", 3, "tree"]],
       template: function TreeCategoryComponent_Template(rf, ctx) {
         if (rf & 1) {
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
@@ -209,20 +218,20 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementContainerEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "a", 3);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 3);
-
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function TreeCategoryComponent_Template_div_click_6_listener() {
-            return ctx.goToTreeCategoryRouter();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function TreeCategoryComponent_Template_a_click_6_listener() {
+            return ctx.scrollTop();
           });
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "a", 4);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function TreeCategoryComponent_Template_a_click_7_listener() {
-            return ctx.scrollTop();
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "div", 4);
+
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function TreeCategoryComponent_Template_div_click_7_listener() {
+            return ctx.goToTreeCategoryRouter();
           });
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
@@ -241,7 +250,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngForOf", ctx.treeCategoryTrees);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](1);
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("-app-tree-category__back-button_tree-mode", ctx.treeMode);
         }

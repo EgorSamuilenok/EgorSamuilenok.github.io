@@ -853,7 +853,14 @@ class RegionComponent {
         this._activatedRoute = _activatedRoute;
         this._facadeCountryListService = _facadeCountryListService;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
-        this._windowScrollHeight = 2;
+    }
+    static isScrolling() {
+        if (RegionComponent.scrollBlock.scrollTop > RegionComponent.windowScrollHeight) {
+            RegionComponent.scrollUpButton.classList.add('-app-scroll-up-button_tree-category-visible');
+        }
+        else {
+            RegionComponent.scrollUpButton.classList.remove('-app-scroll-up-button_tree-category-visible');
+        }
     }
     navigateToCurrentSubRegionRoute() {
         const firstSubRegionCountryName = this.subRegionsCountries[0].name;
@@ -865,16 +872,9 @@ class RegionComponent {
         this._router.navigate(['/countries', 'region', this.regionName, this.subRegionName, 'country', firstSubRegionCountryRouterName]);
     }
     ngOnInit() {
-        const scrollUpButton = document.querySelector('.-app-scroll-up-button_sub-region-category');
-        this._scrollBlock = document.querySelector('.-app-region');
-        this._scrollBlock.addEventListener('scroll', () => {
-            if (this._scrollBlock.scrollTop > this._windowScrollHeight) {
-                scrollUpButton.classList.add('-app-scroll-up-button_sub-region-category-visible');
-            }
-            else {
-                scrollUpButton.classList.remove('-app-scroll-up-button_sub-region-category-visible');
-            }
-        });
+        RegionComponent.scrollBlock = document.querySelector('.-app-region');
+        RegionComponent.scrollUpButton = document.querySelector('.-app-scroll-up-button_sub-region-category');
+        RegionComponent.scrollBlock.addEventListener('scroll', RegionComponent.isScrolling);
         this._activatedRoute.params
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe((params) => {
             this.regionName = params.regionName;
@@ -906,9 +906,13 @@ class RegionComponent {
     ngOnDestroy() {
         this._destroySubject$.next(true);
         this._destroySubject$.complete();
+        RegionComponent.scrollBlock.removeEventListener('scroll', RegionComponent.isScrolling);
     }
     scrollTop() {
-        this._scrollBlock.scrollTo(0, 0);
+        RegionComponent.scrollBlock.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     }
     canDeactivate() {
         const deactivateQuestion = 'You haven’t chosen country. Are you sure that you want to go from this page? For donation you need at least one country';
@@ -917,6 +921,7 @@ class RegionComponent {
             : true;
     }
 }
+RegionComponent.windowScrollHeight = 2;
 RegionComponent.ɵfac = function RegionComponent_Factory(t) { return new (t || RegionComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_5__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_6__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_6__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](src_app_store_country_list_country_list_facade__WEBPACK_IMPORTED_MODULE_7__["FacadeServiceCountryList"])); };
 RegionComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: RegionComponent, selectors: [["app-region"]], decls: 12, vars: 7, consts: [[1, "-app-region"], [1, "-app-region__title"], [1, "-app-region__sub-title"], [1, "-app-region__country-list"], [3, "country", 4, "ngFor", "ngForOf"], [1, "-app-scroll-up-button", "-app-scroll-up-button_sub-region-category", 3, "click"], [1, "-app-region__current-country"], [3, "country"]], template: function RegionComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);

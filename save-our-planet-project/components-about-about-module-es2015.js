@@ -56,24 +56,27 @@ __webpack_require__.r(__webpack_exports__);
 
 class AboutComponent {
     // tslint:disable-next-line: no-empty
-    constructor() {
-        this._windowScrollHeight = 500;
+    constructor() { }
+    static isScrolling() {
+        if (window.scrollY > AboutComponent.windowScrollHeight) {
+            AboutComponent.leftDesert.classList.add('-app-about__parallax-item_desert-left-invisible');
+            AboutComponent.rightDesert.classList.add('-app-about__parallax-item_desert-right-invisible');
+        }
+        else {
+            AboutComponent.leftDesert.classList.remove('-app-about__parallax-item_desert-left-invisible');
+            AboutComponent.rightDesert.classList.remove('-app-about__parallax-item_desert-right-invisible');
+        }
     }
     ngOnInit() {
-        const leftDesert = document.querySelector('.-app-about__parallax-item_desert-left');
-        const rightDesert = document.querySelector('.-app-about__parallax-item_desert-right');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > this._windowScrollHeight) {
-                leftDesert.classList.add('-app-about__parallax-item_desert-left-invisible');
-                rightDesert.classList.add('-app-about__parallax-item_desert-right-invisible');
-            }
-            else {
-                leftDesert.classList.remove('-app-about__parallax-item_desert-left-invisible');
-                rightDesert.classList.remove('-app-about__parallax-item_desert-right-invisible');
-            }
-        });
+        AboutComponent.leftDesert = document.querySelector('.-app-about__parallax-item_desert-left');
+        AboutComponent.rightDesert = document.querySelector('.-app-about__parallax-item_desert-right');
+        window.addEventListener('scroll', AboutComponent.isScrolling);
+    }
+    ngOnDestroy() {
+        window.removeEventListener('scroll', AboutComponent.isScrolling);
     }
 }
+AboutComponent.windowScrollHeight = 500;
 AboutComponent.ɵfac = function AboutComponent_Factory(t) { return new (t || AboutComponent)(); };
 AboutComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AboutComponent, selectors: [["app-about"]], decls: 21, vars: 0, consts: [[1, "-app-about"], [1, "-app-about__parallax"], [1, "-app-about__parallax-item", "-app-about__parallax-item_forest"], [1, "-app-about__parallax-item", "-app-about__parallax-item_desert-left"], [1, "-app-about__parallax-item", "-app-about__parallax-item_desert-right"], [1, "-app-about__content"], [1, "-app-about__content-wrapper"], [1, "-app-about__content-header"], [1, "-app-about__content-title"], [1, "-app-about__content-sub-title"], [1, "-app-about__content-article"], [1, "-app-about__content-article-paragraph"]], template: function AboutComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
