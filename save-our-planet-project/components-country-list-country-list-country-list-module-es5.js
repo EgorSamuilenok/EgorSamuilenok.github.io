@@ -1053,10 +1053,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }, {
         key: "goToCurrentCountryRouter",
         value: function goToCurrentCountryRouter() {
-          this.onSelected.emit(this.country);
-          var countryName = this.country.name.replace(/\./g, '').replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
+          if (!this.isSearchLoading) {
+            this.onSelected.emit(this.country);
+            var countryName = this.country.name.replace(/\./g, '').replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
 
-          this._router.navigate(['/countries', 'region', this._regionName, this._subRegionName, 'country', countryName]);
+            this._router.navigate(['/countries', 'region', this._regionName, this._subRegionName, 'country', countryName]);
+          }
         }
       }]);
 

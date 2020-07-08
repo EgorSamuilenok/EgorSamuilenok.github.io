@@ -454,20 +454,22 @@ class CountryNameComponent {
         this._destroySubject$.complete();
     }
     goToCurrentCountryRouter() {
-        this.onSelected.emit(this.country);
-        const countryName = this.country.name.replace(/\./g, '')
-            .replace(/\(|\)/g, '')
-            .toLowerCase()
-            .split(' ')
-            .join('-');
-        this._router.navigate([
-            '/countries',
-            'region',
-            this._regionName,
-            this._subRegionName,
-            'country',
-            countryName
-        ]);
+        if (!this.isSearchLoading) {
+            this.onSelected.emit(this.country);
+            const countryName = this.country.name.replace(/\./g, '')
+                .replace(/\(|\)/g, '')
+                .toLowerCase()
+                .split(' ')
+                .join('-');
+            this._router.navigate([
+                '/countries',
+                'region',
+                this._regionName,
+                this._subRegionName,
+                'country',
+                countryName
+            ]);
+        }
     }
 }
 CountryNameComponent.ɵfac = function CountryNameComponent_Factory(t) { return new (t || CountryNameComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_5__["Store"])); };
