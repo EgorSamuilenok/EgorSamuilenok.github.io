@@ -1537,7 +1537,7 @@ UserListDataService.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdef
 /*!************************************************************!*\
   !*** ./src/app/store/country-list/country-list.actions.ts ***!
   \************************************************************/
-/*! exports provided: countryListActionsType, InitCountryListAction, InitCountryListSuccessAction, InitCapitalsCoordinatesAction, InitCapitalsCoordinatesDataAction, InitCapitalsCoordinatesDataSuccessAction, InitCountriesForestAreaAction, InitCountriesForestAreaDataAction, InitCountriesForestAreaDataSuccessAction, IsCountriesLoadingSuccessAction, SearchSubRegionCountriesAction, SearchCountryAction, SearchCountrySuccessAction, SearchPreviousCountryAction, SearchNextCountryAction, ToggleMapModeCountryListAction, ToggleShowCapitalsModeCountryListAction, SearchMapCountryAction, DontSearchMapCountryAction, CountCountryForestAreaAction, ResetSearchCountriesAction */
+/*! exports provided: countryListActionsType, InitCountryListAction, InitCountryListSuccessAction, InitCapitalsCoordinatesAction, InitCapitalsCoordinatesDataAction, InitCapitalsCoordinatesDataSuccessAction, InitCountriesForestAreaAction, InitCountriesForestAreaDataAction, InitCountriesForestAreaDataSuccessAction, IsCountriesLoadingSuccessAction, SearchSubRegionCountriesAction, SearchCountryAction, SearchCountrySuccessAction, SearchPreviousCountryAction, SearchNextCountryAction, ToggleMapModeCountryListAction, ToggleShowCapitalsModeCountryListAction, SearchMapCountryAction, DontSearchMapCountryAction, CountCountryForestAreaAction, ResetSearchCountriesAction, SelectCountryAction, ResetSelectedCountryAction */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1563,6 +1563,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DontSearchMapCountryAction", function() { return DontSearchMapCountryAction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CountCountryForestAreaAction", function() { return CountCountryForestAreaAction; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResetSearchCountriesAction", function() { return ResetSearchCountriesAction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SelectCountryAction", function() { return SelectCountryAction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ResetSelectedCountryAction", function() { return ResetSelectedCountryAction; });
 var countryListActionsType;
 (function (countryListActionsType) {
     countryListActionsType["initCountries"] = "[COUNTRY-LIST/API] Init-Countries Country-List";
@@ -1585,6 +1587,8 @@ var countryListActionsType;
     countryListActionsType["dontSearchMapCountry"] = "[COUNTRY-LIST/API] Dont-Search-Map-Country Country-List";
     countryListActionsType["countCountryForestArea"] = "[COUNTRY-LIST/API] Count-Country-Forest-Area Country-List";
     countryListActionsType["resetSearchCounrties"] = "[COUNTRY-LIST/API] Reset-Search-Countries Country-List";
+    countryListActionsType["selectCountry"] = "[COUNTRY-LIST/API] Select-Country Country-List";
+    countryListActionsType["resetSelectedCountry"] = "[COUNTRY-LIST/API] Reset-Selected-Country Country-List";
 })(countryListActionsType || (countryListActionsType = {}));
 class InitCountryListAction {
     constructor() {
@@ -1748,6 +1752,22 @@ class ResetSearchCountriesAction {
         this.type = countryListActionsType.resetSearchCounrties;
     }
 }
+// tslint:disable-next-line: max-classes-per-file
+class SelectCountryAction {
+    constructor(_payload) {
+        this._payload = _payload;
+        this.type = countryListActionsType.selectCountry;
+    }
+    get country() {
+        return this._payload.country;
+    }
+}
+// tslint:disable-next-line: max-classes-per-file
+class ResetSelectedCountryAction {
+    constructor() {
+        this.type = countryListActionsType.resetSelectedCountry;
+    }
+}
 
 
 /***/ }),
@@ -1903,6 +1923,12 @@ class FacadeServiceCountryList {
     resetSearchCounrties() {
         this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["ResetSearchCountriesAction"]());
     }
+    selectCountry(country) {
+        this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["SelectCountryAction"]({ country }));
+    }
+    resetSelectedCountry() {
+        this._store$.dispatch(new _country_list_actions__WEBPACK_IMPORTED_MODULE_2__["ResetSelectedCountryAction"]());
+    }
 }
 FacadeServiceCountryList.ɵfac = function FacadeServiceCountryList_Factory(t) { return new (t || FacadeServiceCountryList)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_3__["Store"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](src_app_services_country_list_country_data_service__WEBPACK_IMPORTED_MODULE_4__["CountryListDataService"])); };
 FacadeServiceCountryList.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: FacadeServiceCountryList, factory: FacadeServiceCountryList.ɵfac });
@@ -1944,7 +1970,8 @@ const initialState = {
     searchPreviousCountry: null,
     searchCountry: null,
     searchNextCountry: null,
-    searchMapCountry: null
+    searchMapCountry: null,
+    selectedCountry: null
 };
 function countryListReducer(state = initialState, action) {
     switch (action.type) {
@@ -2146,6 +2173,12 @@ function countryListReducer(state = initialState, action) {
         case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].resetSearchCounrties: {
             return Object.assign(Object.assign({}, state), { searchCountry: null, searchMapCountry: null, searchNextCountry: null, searchPreviousCountry: null });
         }
+        case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].selectCountry: {
+            return Object.assign(Object.assign({}, state), { selectedCountry: action.country.clone() });
+        }
+        case _country_list_actions__WEBPACK_IMPORTED_MODULE_0__["countryListActionsType"].resetSelectedCountry: {
+            return Object.assign(Object.assign({}, state), { selectedCountry: null });
+        }
         default: {
             return Object.assign({}, state);
         }
@@ -2162,7 +2195,7 @@ function StateReducerCountryList(state, action) {
 /*!**************************************************************!*\
   !*** ./src/app/store/country-list/country-list.selectors.ts ***!
   \**************************************************************/
-/*! exports provided: selectStateCountryList, selectCountryListIsLoading, selectCountryList, selectCountryListIsInitedCountries, selectCountriesForestAreaData, selectIsInitedCountriesForestAreaData, selectCapitalsCoordinatesData, selectIsInitedCapitalsCoordinatesData, selectSubRegionsCountries, selectSearchCountry, selectSearchPreviousCountry, selectSearchNextCountry, selectIsCountrySearchLoading, selectIsMapMode, selectIsGlobeMode, selectIsShowCapitalsMode, selectSearchMapCountry */
+/*! exports provided: selectStateCountryList, selectCountryListIsLoading, selectCountryList, selectCountryListIsInitedCountries, selectCountriesForestAreaData, selectIsInitedCountriesForestAreaData, selectCapitalsCoordinatesData, selectIsInitedCapitalsCoordinatesData, selectSubRegionsCountries, selectSearchCountry, selectSearchPreviousCountry, selectSearchNextCountry, selectIsCountrySearchLoading, selectIsMapMode, selectIsGlobeMode, selectIsShowCapitalsMode, selectSearchMapCountry, selectSelectedCountry */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2184,6 +2217,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectIsGlobeMode", function() { return selectIsGlobeMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectIsShowCapitalsMode", function() { return selectIsShowCapitalsMode; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectSearchMapCountry", function() { return selectSearchMapCountry; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selectSelectedCountry", function() { return selectSelectedCountry; });
 /* harmony import */ var _country_list_reducer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./country-list.reducer */ "./src/app/store/country-list/country-list.reducer.ts");
 /* harmony import */ var _ngrx_store__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @ngrx/store */ "./node_modules/@ngrx/store/__ivy_ngcc__/fesm2015/store.js");
 
@@ -2205,6 +2239,7 @@ const selectIsMapMode = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createS
 const selectIsGlobeMode = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateCountryList, (state) => state.isGlobeMode);
 const selectIsShowCapitalsMode = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateCountryList, (state) => state.isShowCapitalsMode);
 const selectSearchMapCountry = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateCountryList, (state) => state.searchMapCountry);
+const selectSelectedCountry = Object(_ngrx_store__WEBPACK_IMPORTED_MODULE_1__["createSelector"])(selectStateCountryList, (state) => state.selectedCountry);
 
 
 /***/ }),
