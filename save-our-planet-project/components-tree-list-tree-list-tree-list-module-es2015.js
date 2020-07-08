@@ -467,6 +467,7 @@ class TreeProductComponent {
         this._router = _router;
         this._store$ = _store$;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.isSearchLoading = true;
         this.onTreeProductSelected = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
     }
     ngOnInit() {
@@ -480,16 +481,22 @@ class TreeProductComponent {
                 this.isTreeProductSelected = false;
             }
         });
+        this._store$.select(src_app_store_tree_list_tree_list_selectors__WEBPACK_IMPORTED_MODULE_3__["selectIsTreeSearchLoading"])
+            .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe((isSearchLoading) => {
+            this.isSearchLoading = isSearchLoading;
+        });
     }
     ngOnDestroy() {
         this._destroySubject$.next(true);
         this._destroySubject$.complete();
     }
     goToCurrentTreeRouter() {
-        this.onTreeProductSelected.emit(this.tree);
-        const currentTreeName = this.tree.name;
-        const currentTreeRouterName = currentTreeName.replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
-        this._router.navigate(['/trees', 'tree-category', this._treeCategoryName, 'tree', currentTreeRouterName]);
+        if (!this.isSearchLoading) {
+            this.onTreeProductSelected.emit(this.tree);
+            const currentTreeName = this.tree.name;
+            const currentTreeRouterName = currentTreeName.replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
+            this._router.navigate(['/trees', 'tree-category', this._treeCategoryName, 'tree', currentTreeRouterName]);
+        }
     }
 }
 TreeProductComponent.ɵfac = function TreeProductComponent_Factory(t) { return new (t || TreeProductComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["ActivatedRoute"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_ngrx_store__WEBPACK_IMPORTED_MODULE_5__["Store"])); };

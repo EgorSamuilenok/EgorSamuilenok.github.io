@@ -936,6 +936,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         this._router = _router;
         this._store$ = _store$;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_2__["Subject"]();
+        this.isSearchLoading = true;
         this.onTreeProductSelected = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
       }
 
@@ -953,6 +954,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
               _this2.isTreeProductSelected = false;
             }
           });
+
+          this._store$.select(src_app_store_tree_list_tree_list_selectors__WEBPACK_IMPORTED_MODULE_3__["selectIsTreeSearchLoading"]).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_1__["takeUntil"])(this._destroySubject$)).subscribe(function (isSearchLoading) {
+            _this2.isSearchLoading = isSearchLoading;
+          });
         }
       }, {
         key: "ngOnDestroy",
@@ -964,11 +969,13 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
       }, {
         key: "goToCurrentTreeRouter",
         value: function goToCurrentTreeRouter() {
-          this.onTreeProductSelected.emit(this.tree);
-          var currentTreeName = this.tree.name;
-          var currentTreeRouterName = currentTreeName.replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
+          if (!this.isSearchLoading) {
+            this.onTreeProductSelected.emit(this.tree);
+            var currentTreeName = this.tree.name;
+            var currentTreeRouterName = currentTreeName.replace(/\(|\)/g, '').toLowerCase().split(' ').join('-');
 
-          this._router.navigate(['/trees', 'tree-category', this._treeCategoryName, 'tree', currentTreeRouterName]);
+            this._router.navigate(['/trees', 'tree-category', this._treeCategoryName, 'tree', currentTreeRouterName]);
+          }
         }
       }]);
 
