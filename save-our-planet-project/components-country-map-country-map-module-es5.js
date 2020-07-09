@@ -32614,7 +32614,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
         this._facadeCountryListService = _facadeCountryListService;
         this._router = _router;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subject"]();
-        this.infoMode = true;
       }
 
       _createClass(CountryMapComponent, [{
@@ -32922,7 +32921,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "div", 10);
 
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, " Hello, It's Save our planet project!!! Change the environmental situation in the world! You can donate any tree to a country and improve its ecology and then you will get medical insurance in return! ");
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, " Hello, It's Save our planet project!!! Change the environmental situation in the world! You can donate any tree to a country and improve its ecology and then you will get medical insurance in return! Click on any country to start your donation trip! ");
 
           _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
 

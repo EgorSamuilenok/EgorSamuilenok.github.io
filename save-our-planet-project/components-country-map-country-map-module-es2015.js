@@ -21566,7 +21566,6 @@ class CountryMapComponent {
         this._facadeCountryListService = _facadeCountryListService;
         this._router = _router;
         this._destroySubject$ = new rxjs__WEBPACK_IMPORTED_MODULE_7__["Subject"]();
-        this.infoMode = true;
     }
     takeSearchMapCountryRouteName(countryName) {
         return countryName.replace(/\./g, '')
@@ -21804,7 +21803,7 @@ CountryMapComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "div", 9);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "div", 10);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, " Hello, It's Save our planet project!!! Change the environmental situation in the world! You can donate any tree to a country and improve its ecology and then you will get medical insurance in return! ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, " Hello, It's Save our planet project!!! Change the environmental situation in the world! You can donate any tree to a country and improve its ecology and then you will get medical insurance in return! Click on any country to start your donation trip! ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](15, "button", 11);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("click", function CountryMapComponent_Template_button_click_15_listener() { return ctx.toggleInfoMode(); });
