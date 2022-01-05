@@ -3033,7 +3033,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! D:\EPAM training\save-our-planet\save-our-planet-project\src\polyfills.ts */"./src/polyfills.ts");
+module.exports = __webpack_require__(/*! C:\Users\Yahor_Samuilionak\work\save-planet\save-our-planet\save-our-planet-project\src\polyfills.ts */"./src/polyfills.ts");
 
 
 /***/ })
